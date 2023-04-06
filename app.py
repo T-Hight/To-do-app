@@ -40,7 +40,7 @@ def create_todo():
         else:            
             return jsonify(body)
 
-@app.route('/todos/set-completed', methods=['POST'])
+@app.route('/todos/<todo_id>/set-completed', methods=['POST'])
 def set_completed_todo(todo_id):
     try:
         completed = request.get_json()['completed']
@@ -57,5 +57,5 @@ def set_completed_todo(todo_id):
 def index():
     return render_template('index.html', data=Todo.query.all())
 
-#if __name__ == '__main__':
-   # app.run()
+if __name__ == '__main__':
+    app.run(debug=True)
