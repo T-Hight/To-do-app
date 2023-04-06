@@ -10,19 +10,51 @@
         padding: 0;
         margin: 0;
        }
+       li {
+        clear: both;
+      }
+      li button {
+        border: none;
+        outline: none;
+        color: red;
+        float: right;
+        cursor: pointer;
+        font-size: 20px;
+      }
+      .lists-wrapper, .todos-wrapper {
+        display: inline-block;
+        vertical-align: top;
+      }
       </style>
   </head>
   <body>
-    <form id='form'>
-      <input type="text" id='description' />
-      <input type="submit" value="Create" />
-    </form>
-    <div class = "hidden" id = "error" > Something went wrong! </div>
-    <ul id='todos'>
-      {% for d in data %}
-      <li><input class="check-completed" data-id="{{ d.id }}" type="checkbox" {% if d.completed %} checked {% endif %}/> {{ d.description }} </li>
-      {% endfor %}
-    </ul>
+    <div class="lists-wrapper">
+      <ul id="lists">
+        {% for list in lists %}
+        <li>
+          <a href="/lists/{{ list.id }}">
+            {{ list.name }}
+          </a>
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+    <div class="todos-wrapper">
+    <form id="form">
+        <input type="text" id="description" name="description" />
+        <input type="submit" value="Create" />
+      </form>
+      <div id="error" class="hidden">Something went wrong!</div>
+      <ul id="todos">
+        {% for d in data %}
+        <li>
+          <input class="check-completed" data-id="{{ d.id }}" type="checkbox" {% if d.completed %} checked {% endif %} />
+          {{ d.description }}
+          <button>&cross;</button>
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
   <script>
     const descInput = document.getElementById('description');
     const checkboxes = document.querySelectorAll('.check-completed');
