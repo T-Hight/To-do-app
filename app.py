@@ -26,7 +26,7 @@ def create_todo():
    error = False
    try: 
        description =  request.get_json()['description']
-       todo = Todo(description=description)
+       todo = Todo(description=description, completed=False)
        body['description'] = todo.description
        db.session.add(todo)
        db.session.commit()
@@ -45,6 +45,7 @@ def create_todo():
 def set_completed_todo(todo_id):
     try:
         completed = request.get_json()['completed']
+        print('completed', completed)
         todo = Todo.query.get(todo_id)
         todo.completed = completed
         db.session.commit()
