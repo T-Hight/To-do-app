@@ -50,7 +50,7 @@
         <li>
           <input class="check-completed" data-id="{{ d.id }}" type="checkbox" {% if d.completed %} checked {% endif %} />
           {{ d.description }}
-          <button>&cross;</button>
+          <button class="delete-button" data-id="{{ d.id }}">&cross;</button>
         </li>
         {% endfor %}
       </ul>
@@ -81,6 +81,21 @@
           });
         }
     }
+
+    const deleteBtns = document.querySelectorAll('.delete-button');
+  for (let i = 0; i < deleteBtns.length; i++) {
+    const btn = deleteBtns[i];
+    btn.onclick = function(e) {
+      const todoId = e.target.dataset['id'];
+      fetch('/todos/' + todoId, {
+        method: 'DELETE',
+      })
+      .then(function() {
+        location.reload()
+      })
+    }
+  }  
+
     document.getElementById('form').onsubmit = function (e) {
     e.preventDefault();
     const desc = descInput.value;
@@ -95,11 +110,12 @@
          return response.json();
     })
     .then(function(jsonResponse) {
-         console.log(jsonresponse);
+         console.log(jsonResponse);
          const liItem= document.createElement('li');
          liItem.innerHTML = jsonResponse['description'];
          document.getElementById('todos').appendChild(liItem);
          document.getElementById('error').classname='hidden';
+         location.reload();
     })
     .catch(function() {
          document.getElementById('error').className='';
