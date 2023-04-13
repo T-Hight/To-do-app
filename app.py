@@ -13,7 +13,7 @@ class Todo(db.Model):
   __tablename__ = 'todos'
   id = db.Column(db.Integer, primary_key=True)
   description = db.Column(db.String(), nullable=False)
-  completed = db.Column(db.Boolean, nullable=False, default=False)
+  completed = db.Column(db.Boolean, default=False)
   list_id = db.Column(db.Integer, db.ForeignKey('todolists.id'), nullable=False)
 
   def __repr__(self):
@@ -34,12 +34,12 @@ def create_todo():
    error = False
    try: 
        description =  request.get_json()['description']
-       todo = Todo(description=description, completed=False)
-       body['description'] = todo.description
+       list_id = request.get_json()['list_id']
+       todo = Todo(description=description)
+       active_list = TodoList.query.get(list_id)
+       todo.list = active_list
        db.session.add(todo)
        db.session.commit()
-       body['id'] = todo.id
-       body['completed'] = todo.completed
        body['description'] = todo.description
    except:        
         error = True
@@ -48,7 +48,7 @@ def create_todo():
    finally:
         db.session.close()           
         if  error:
-            abort(400)
+            abort(500)
         else:            
             return jsonify(body)
 
@@ -79,7 +79,10 @@ def delete_todo(todo_id):
 
 @app.route('/lists/<list_id>')
 def get_list_todos(list_id):
-    return render_template('index.html', data=Todo.query.filter_by(list_id=list_id).order_by('id').all())
+    return render_template('index.html',
+    lists=TodoList.query.all(),
+    active_list=TodoList.query.get(list_id),
+    todos=Todo.query.filter_by(list_id=list_id).order_by('id').all())
 
 @app.route('/')
 def index():
