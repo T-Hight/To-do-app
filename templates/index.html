@@ -21,13 +21,11 @@
         float: right;
         cursor: pointer;
         font-size: 20px;
+        margin-right: 75px;
       }
       .lists-wrapper, .todos-wrapper {
         display: inline-block;
         vertical-align: top;
-      }
-      .list-wrapper {
-
       }
     </style>
   </head>
@@ -38,6 +36,7 @@
         <input type="text" id="description" name="description" />
         <input type="submit" value="Create" />
       </form>
+      <div id="error" class="hidden">Something went wrong!</div>
       <ul id="lists">
         {% for list in lists %}
         <li>
