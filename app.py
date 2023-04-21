@@ -61,7 +61,7 @@ def update_todo(todo_id):
         print('Todo: ', todo)
         todo.complete = complete
         db.session.commit()
-    except():
+    except:
         db.session.rollback()
         error = True
         print(sys.exc_info())
@@ -165,21 +165,17 @@ def delete_list(list_id):
 @app.route('/lists/<list_id>/set-completed', methods=['POST'])
 def set_completed_list(list_id):
     error = False
-
     try:
         list = TodoList.query.get(list_id)
-
         for todo in list.todos:
             todo.completed = True
 
         db.session.commit()
     except:
         db.session.rollback()
-
         error = True
     finally:
         db.session.close()
-
     if error:
         abort(500)
     else:
