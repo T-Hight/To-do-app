@@ -73,11 +73,9 @@
       const listCheckboxes = document.querySelectorAll('.list-check-completed');
       for (let i = 0; i < listCheckboxes.length; i++) {
         const checkbox = listCheckboxes[i];
-
         checkbox.onchange = function (e) {
           if (e.target.checked) {
             const listId = e.target.dataset.id;
-
             fetch('/lists' + listId + '/set-completed', {
               method: 'POST',
               headers: {
@@ -86,12 +84,9 @@
             })
             .then(function (jsonResponse) {
               document.getElementById('error').className = 'hidden';
-
               const todoCheckboxes = document.querySelectorAll('.todo-check-completed');
-
               for (let i = 0; i < todoCheckboxes.length; i++) {
                 const checkbox = todoCheckboxes[i];
-
                 checkbox.checked = true;
               }
             })
@@ -105,11 +100,9 @@
       const todoCheckboxes = document.querySelectorAll('.todo-check-completed');
       for (let i = 0; i < todoCheckboxes.length; i++) {
         const checkbox = todoCheckboxes[i];
-        
         checkbox.onchange = function(e) {
           const newCompleted = e.target.checked;
           const todoId = e.target.datase.id;
-          
           fetch('/todos/' + todoId + '/set-completed', {
             method: 'POST',
             body: JSON.stringify({
