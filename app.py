@@ -76,7 +76,7 @@ def update_todo(todo_id):
 def delete_todo(todo_id):
     error = False
     try:
-        #Todo.query.filter_by(id=todo_id).delete()
+        Todo.query.filter_by(id=todo_id).delete()
         todo = Todo.query.get(todo_id)
         db.session.delete(todo)
         db.session.commit()
@@ -96,6 +96,7 @@ def set_completed_todo(todo_id):
     try:
         completed = request.get_json()['completed']
         todo = Todo.query.get(todo_id)
+        todo.completed = completed
         db.session.commit()
     except:
         db.session.rollback()
@@ -106,6 +107,10 @@ def set_completed_todo(todo_id):
        abort(500)
     else:
       return '', 200
+
+@app.route('/')
+def index():
+    return redirect(url_for('get_list_todos', list_id=1))
 
 @app.route('/lists/<list_id>')
 def get_list_todos(list_id):
@@ -144,7 +149,6 @@ def delete_list(list_id):
         list = TodoList.query.get(list_id)
         for todo in list.todos:
             db.session.delete(todo)
-        
         db.session.delete(list)
         db.session.commit()
     except:
@@ -165,7 +169,6 @@ def set_completed_list(list_id):
         list = TodoList.query.get(list_id)
         for todo in list.todos:
             todo.completed = True
-
         db.session.commit()
     except:
         db.session.rollback()
@@ -176,10 +179,6 @@ def set_completed_list(list_id):
         abort(500)
     else:
         return '', 200
-
-@app.route('/')
-def index():
-    return redirect(url_for('get_list_todos', list_id=1))
 
 if __name__ == '__main__':
     app.run(debug=True)
