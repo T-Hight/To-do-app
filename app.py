@@ -107,10 +107,6 @@ def set_completed_todo(todo_id):
     else:
       return '', 200
 
-@app.route('/')
-def index():
-    return redirect(url_for('get_list_todos', list_id=1))
-
 @app.route('/lists/<list_id>')
 def get_list_todos(list_id):
     lists=TodoList.query.all()
@@ -181,6 +177,9 @@ def set_completed_list(list_id):
     else:
         return '', 200
 
+@app.route('/')
+def index():
+    return redirect(url_for('get_list_todos', list_id=1))
 
 if __name__ == '__main__':
     app.run(debug=True)
